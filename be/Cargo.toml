@@ -4,3 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+tokio = {version = "1.49", features=["full"]}
+warp = "0.4"
+futures = { version = "0.3", default-features=false}
+serde = { version = "1", features=["derive"]}
+serde_json = "1"
+uuid = {version = "1.19", feartures=["v4","fast-rng","macro-diagnostic"]}
