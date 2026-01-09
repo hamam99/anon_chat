@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { MessageResponse } from '../../interfaces/MessageResponse';
 import { generateUsername } from 'unique-username-generator';
 import InputReply from './InputReply';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // ws://127.0.0.1:3030/ws?username=PostmanUser2
 
@@ -73,7 +74,7 @@ const ChatsLayout = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={messages}
         renderItem={RenderItem}
@@ -84,7 +85,7 @@ const ChatsLayout = () => {
           ws?.send(text);
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -104,7 +105,5 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 40,
-    paddingBottom: 16,
   },
 });

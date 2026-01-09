@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
   },
   input: {
     maxHeight: 60,
+    height: 36,
   },
   sendButton: {
     width: 42,
