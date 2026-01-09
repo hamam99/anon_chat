@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { MessageResponse } from '../../interfaces/MessageResponse';
 import { generateUsername } from 'unique-username-generator';
-import InputReply from './InputReply';
+import InputReply from '../../components/ui/InputReply';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 // ws://127.0.0.1:3030/ws?username=PostmanUser2
