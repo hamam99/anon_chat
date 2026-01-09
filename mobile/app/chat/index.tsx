@@ -7,7 +7,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 // ws://127.0.0.1:3030/ws?username=PostmanUser2
 
-const SERVER_URL = 'ws://10.164.186.97:3030';
+// const SERVER_URL = 'ws://10.164.186.97:3030';
+const SERVER_URL = 'ws://localhost:3030';
 
 const Chats = () => {
   const [username, setUsername] = useState(generateUsername('-'));
