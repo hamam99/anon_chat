@@ -33,7 +33,8 @@ async fn main() {
         });
 
     println!("Server started");
-    warp::serve(chat).run(([127, 0, 0, 1], 3030)).await;
+    // warp::serve(chat).run(([127, 0, 0, 1], 3030)).await;
+    warp::serve(chat).run(([0, 0, 0, 0], 3030)).await;
 }
 async fn user_connected(ws: WebSocket, users: Users, username: String) {
     let (user_ws_tx, mut user_ws_rx) = ws.split();
