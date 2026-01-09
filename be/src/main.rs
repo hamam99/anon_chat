@@ -1,5 +1,4 @@
 use futures::{FutureExt, StreamExt};
-use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
     sync::{
@@ -11,19 +10,14 @@ use tokio::sync::{mpsc, RwLock};
 use warp::ws::{Message, WebSocket};
 use warp::Filter;
 
+pub mod client;
+use crate::client::Client;
+
+pub mod user_request;
+use crate::user_request::UserRequest;
+
 static NEXT_USER_ID: AtomicUsize = AtomicUsize::new(1);
-struct Client {
-    pub user_id: usize,
-    pub username: String,
-    pub sender: mpsc::UnboundedSender<std::result::Result<Message, warp::Error>>,
-}
-
 type Users = Arc<RwLock<HashMap<usize, Client>>>;
-
-#[derive(Deserialize, Serialize)]
-struct UserRequest {
-    username: String,
-}
 
 #[tokio::main]
 async fn main() {
