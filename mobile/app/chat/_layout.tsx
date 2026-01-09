@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { MessageResponse } from '../../interfaces/MessageResponse';
 import { generateUsername } from 'unique-username-generator';
 import InputReply from './InputReply';
@@ -58,46 +58,26 @@ const ChatsLayout = () => {
     const isSystem = item.sender === 'System';
     return (
       <View
-        style={{
-          paddingVertical: 4,
-          backgroundColor: isSystem ? '#fdf0d5' : 'white',
-          paddingHorizontal: 16,
-          width: 'auto',
-          maxWidth: '80%',
-          borderRadius: 8,
-          alignSelf: isSystem ? 'center' : isMe ? 'flex-end' : 'flex-start',
-        }}
+        style={[
+          styles.itemChat,
+          {
+            backgroundColor: isSystem ? '#fdf0d5' : 'white',
+            alignSelf: isSystem ? 'center' : isMe ? 'flex-end' : 'flex-start',
+          },
+        ]}
       >
-        {!isSystem && (
-          <Text
-            style={{
-              fontWeight: '600',
-              color: 'black',
-            }}
-          >
-            {item.sender}
-          </Text>
-        )}
+        {!isSystem && <Text style={styles.itemSender}>{item.sender}</Text>}
         <Text>{item.message}</Text>
       </View>
     );
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingTop: 40,
-        paddingBottom: 16,
-      }}
-    >
+    <View style={styles.container}>
       <FlatList
         data={messages}
         renderItem={RenderItem}
         ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-        style={{
-          flex: 1,
-        }}
       />
       <InputReply
         onSend={(text) => {
@@ -109,3 +89,22 @@ const ChatsLayout = () => {
 };
 
 export default ChatsLayout;
+
+const styles = StyleSheet.create({
+  itemChat: {
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+    width: 'auto',
+    maxWidth: '80%',
+    borderRadius: 8,
+  },
+  itemSender: {
+    fontWeight: '600',
+    color: 'black',
+  },
+  container: {
+    flex: 1,
+    paddingTop: 40,
+    paddingBottom: 16,
+  },
+});
