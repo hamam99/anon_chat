@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
-import { Button, Text, TextInput, View } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
+import { MessageResponse } from '../../interfaces/MessageResponse';
+import { generateUsername } from 'unique-username-generator';
+import InputReply from './InputReply';
 
 // ws://127.0.0.1:3030/ws?username=PostmanUser2
 
-const SERVER_URL = 'ws://10.106.1.136:3030';
+const SERVER_URL = 'ws://10.164.186.97:3030';
 
 const ChatsLayout = () => {
-  const [username, setUsername] = useState('');
-  const [usernameTemp, setUsernameTemp] = useState('');
+  const [username, setUsername] = useState(generateUsername('-'));
 
   const [ws, setWs] = useState<WebSocket | null>(null);
+  const [messages, setMessages] = useState<MessageResponse[]>([]);
 
   useEffect(() => {
     if (!username) {
@@ -23,7 +26,14 @@ const ChatsLayout = () => {
     };
 
     websocket.onmessage = (event) => {
-      console.log('Message received:', event.data);
+      const message = event.data;
+
+      const formatted = JSON.parse(message) as MessageResponse;
+      setMessages((prev) => [...prev, formatted]);
+      console.log('Message received:', {
+        message,
+        type: typeof message,
+      });
     };
 
     websocket.onerror = (error) => {
@@ -43,49 +53,58 @@ const ChatsLayout = () => {
     };
   }, [username]);
 
-  if (!username) {
+  const RenderItem = ({ item }: { item: MessageResponse }) => {
+    const isMe = item.sender === username;
+    const isSystem = item.sender === 'System';
     return (
       <View
         style={{
-          flex: 1,
-          padding: 16,
-          justifyContent: 'center',
-          alignItems: 'center',
+          paddingVertical: 4,
+          backgroundColor: isSystem ? '#fdf0d5' : 'white',
+          paddingHorizontal: 16,
+          width: 'auto',
+          maxWidth: '80%',
+          borderRadius: 8,
+          alignSelf: isSystem ? 'center' : isMe ? 'flex-end' : 'flex-start',
         }}
       >
-        <Text>Please enter your username</Text>
-        <TextInput
-          style={{
-            borderWidth: 1,
-            borderColor: 'gray',
-            padding: 10,
-            marginVertical: 10,
-            width: '100%',
-          }}
-          placeholder="Enter your username"
-          value={usernameTemp}
-          onChangeText={setUsernameTemp}
-        />
-        <Button
-          title="Submit"
-          onPress={() => {
-            if (usernameTemp.length < 3) {
-              return;
-            }
-            setUsername(usernameTemp);
-            setUsernameTemp('');
-          }}
-        />
+        {!isSystem && (
+          <Text
+            style={{
+              fontWeight: '600',
+              color: 'black',
+            }}
+          >
+            {item.sender}
+          </Text>
+        )}
+        <Text>{item.message}</Text>
       </View>
     );
-  }
+  };
 
   return (
     <View
       style={{
         flex: 1,
+        paddingTop: 40,
+        paddingBottom: 16,
       }}
-    ></View>
+    >
+      <FlatList
+        data={messages}
+        renderItem={RenderItem}
+        ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+        style={{
+          flex: 1,
+        }}
+      />
+      <InputReply
+        onSend={(text) => {
+          ws?.send(text);
+        }}
+      />
+    </View>
   );
 };
 
