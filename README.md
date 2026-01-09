@@ -12,7 +12,7 @@ This repository contains both parts:
 
 ### Screenshot
 
-![Anon Chat Screenshot](readme-assets/screenshot.png)
+<img src="readme-assets/screenshot.png" alt="Anon Chat Screenshot" width="320" />
 
 ### Demo Video
 
@@ -155,4 +155,3 @@ anon_chat/
    ├─ screenshot.png
    └─ video.mov
 ```
-
