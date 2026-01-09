@@ -13,6 +13,9 @@ use warp::Filter;
 pub mod client;
 use crate::client::Client;
 
+pub mod message_response;
+use crate::message_response::MessageResponse;
+
 pub mod user_request;
 use crate::user_request::UserRequest;
 
@@ -104,7 +107,14 @@ async fn broadcast_message(users: &Users, sender_name: &str, message: &str) {
     let formatted_msg = format!("{}: {}", sender_name, message);
 
     let users_guard = users.read().await;
+
+    let message_response = MessageResponse {
+        sender: sender_name.to_string(),
+        message: message.to_string(),
+    };
     for client in users_guard.values() {
-        let _ = client.sender.send(Ok(Message::text(formatted_msg.clone())));
+        let _ = client.sender.send(Ok(Message::text(
+            serde_json::to_string(&message_response).unwrap(),
+        )));
     }
 }
